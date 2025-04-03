@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+
+<tite>{% block title %}PSUSphere{% endblock %}</tite>
+<link rel="stylesheet" href="{% static 'css/bootsrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/ready.css' %}">
+<link rel="stylesheet" href="{% static 'css/demo.css' %}">
+
+<script src="{% static 'js/core/jquery.3.2.1.min.js' %}"></script>
+<script src="{% static 'js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/core/popper.min.js' %}"></script>
+<script src="{% static 'js/core/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugin/chartist/chartist.min.js' %}"></script>
+<script src="{% static 'js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js' %}"></script>
+<script src="{% static 'js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+<script src="{% static 'js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
+<script src="{% static 'js/plugin/jquery-mapael/jquery.mapael.min.js' %}"></script>
+<script src="{% static 'js/plugin/jquery-mapael/maps/world_countries.min.js' %}"></script>
+<script src="{% static 'js/plugin/chart-circle/circles.min.js' %}"></script>
+<script src="{% static 'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+<script src="{% static 'js/ready.min.js' %}"></script>
+
+<img src="{% static 'img/profile.jpg' %}" alt="user-img" width="36" class="img-circle">
+<div class="user-box">
+    <div class="u-img"><img src="{% static 'img/profile.jpg' %}" alt="user"></div>
+
+    <div class="photo">
+        <img src="{% static 'img/profile.jpg' %}">
+<p>Dashboard</p>
+<p>Organization</p>
+<p>Org. Members</p>
+<p>Student</p>
+<p>College</p>
+
+<div class="main-panel">
+    {% block content %}
+    {% endblock %}
