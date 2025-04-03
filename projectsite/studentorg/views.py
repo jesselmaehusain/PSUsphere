@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render # type: ignore
+from django.views.generic.list import ListView # type: ignore
+from studentorg.models import Organization
 
-# Create your views here.
+class HomePageView(ListView):
+    model = Organization
+    context_object_name = 'home'
+    template_name = 'home.html'
