@@ -1,7 +1,8 @@
+from django.forms import ModelForm # type: ignore
 from django import forms # type: ignore
-from studentorg.models import Organization
+from .models import Organization # type: ignore
 
-class OrganizationForm(forms.ModelForm):
+class OrganizationForm(ModelForm):
     class Meta:
         model = Organization
-        fields = '__all__'  # Include all fields, or specify the ones you need
+        fields = "__all__"
