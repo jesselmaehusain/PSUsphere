@@ -6670,5 +6670,34 @@ body {
     display: none;
   }
 }
+/* Custom styles to move the notification icon to the upper right */
+.notif-box {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000; /* Ensure it's above other elements */
+}
+
+.nav-item.dropdown.hidden-caret {
+  position: relative;
+}
+
+.nav-item.dropdown.hidden-caret .nav-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+}
+
+.notification {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 8px;
+  font-size: 12px;
+}
 
 /*# sourceMappingURL=ready.css.map */

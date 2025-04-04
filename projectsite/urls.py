@@ -1,5 +1,5 @@
-from django.contrib import admin # type: ignore
-from django.urls import path # type: ignore
+from django.contrib import admin
+from django.urls import path
 from studentorg.views import HomePageView
 from studentorg import views
 
