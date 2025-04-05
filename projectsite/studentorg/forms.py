@@ -1,6 +1,6 @@
-from django.forms import ModelForm # type: ignore
-from django import forms # type: ignore
-from .models import Organization # type: ignore
+from django.forms import ModelForm
+from django import forms
+from .models import Organization
 
 class OrganizationForm(ModelForm):
     class Meta:
