@@ -11,7 +11,28 @@
                         <div class="card-title">Page Title</div>
                         <div class="card-category">Page Subtitle</div>
                     </div>
-                    <div class="card-body">Hello, World</div>
+                    <div class="card-body">
+                        <p>Hello, World</p>
+
+                        <h2>Organizations</h2>
+                        <ul>
+                          {% for org in organizations %}
+                            <li>{{ org.name }}</li>
+                          {% empty %}
+                            <li>No organizations found.</li>
+                          {% endfor %}
+                        </ul>
+
+                        <h2>Students</h2>
+                        <ul>
+                          {% for student in students %}
+                            <li>{{ student.name }}</li>
+                          {% empty %}
+                            <li>No students found.</li>
+                          {% endfor %}
+                        </ul>
+                        
+                    </div>
                 </div>
             </div>
         </div>
