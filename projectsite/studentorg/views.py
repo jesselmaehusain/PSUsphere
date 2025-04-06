@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from studentorg.models import Organization, OrgMember, Student, College
+from studentorg.models import Organization, OrgMember, Student, College, Program
 from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm
 
 class HomePageView(TemplateView):
@@ -13,6 +13,7 @@ class HomePageView(TemplateView):
         context['students'] = Student.objects.all()
         context['orgMember'] = OrgMember.objects.all()
         context['colleges'] = College.objects.all()
+        context['programs'] = Program.objects.all()
         return context
 
 class OrganizationList(ListView):
@@ -107,5 +108,13 @@ class CollegeDeleteView(DeleteView):
     model = College
     template_name = 'college_del.html'
     success_url = reverse_lazy('college-list')
+
+
+class ProgramList(ListView):
+    model = Program
+    context_object_name = 'programs'
+    template_name = 'program_list.html'
+    paginate_by = 5
+
 
 
