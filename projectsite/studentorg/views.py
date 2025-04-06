@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from studentorg.models import Organization, OrgMember, Student, College, Program
-from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm
+from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
 
 class HomePageView(TemplateView):
     template_name = "home.html"
@@ -116,5 +116,9 @@ class ProgramList(ListView):
     template_name = 'program_list.html'
     paginate_by = 5
 
-
+class ProgramCreateView(CreateView):
+    model = Program
+    form_class = ProgramForm
+    template_name = 'program_add.html'
+    success_url = reverse_lazy('program-list')
 

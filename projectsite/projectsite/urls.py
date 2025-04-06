@@ -6,7 +6,7 @@ from studentorg.views import (
     OrgMemberList, OrgMemberCreateView, OrgMemberUpdateView, OrgMemberDeleteView,
     StudentList,StudentCreateView,StudentUpdateView,StudentDeleteView,
     CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView,
-    ProgramList,
+    ProgramList, ProgramCreateView,
 )
 
 urlpatterns = [
@@ -42,4 +42,6 @@ urlpatterns = [
 
     # Program URLs
     path('program_list/', ProgramList.as_view(), name='program_list'),
+    path('program_list/add/', ProgramCreateView.as_view(), name='program-add'),
+    
 ]
