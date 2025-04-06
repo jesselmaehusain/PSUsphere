@@ -15,6 +15,8 @@ class HomePageView(TemplateView):
         context['colleges'] = College.objects.all()
         context['programs'] = Program.objects.all()
         return context
+    
+# Organization URLs
 
 class OrganizationList(ListView):
     model = Organization
@@ -39,6 +41,8 @@ class OrganizationDeleteView(DeleteView):
     template_name = 'org_del.html'
     success_url = reverse_lazy('organization-list')
 
+# Organization member URLs
+
 class OrgMemberList(ListView):
     model = OrgMember
     context_object_name = 'orgMember'
@@ -62,7 +66,7 @@ class OrgMemberDeleteView(DeleteView):
     template_name = 'orgMem_del.html'
     success_url = reverse_lazy('orgMember-list')
 
-
+# Student list
 class StudentList(ListView):
     model = Student
     context_object_name = 'students'
@@ -85,6 +89,8 @@ class StudentDeleteView(DeleteView):
     model = Student
     template_name = 'student_del.html'
     success_url = reverse_lazy('student-list')
+
+# College list
     
 class CollegeList(ListView):
     model = College
@@ -109,7 +115,7 @@ class CollegeDeleteView(DeleteView):
     template_name = 'college_del.html'
     success_url = reverse_lazy('college-list')
 
-
+# Program URLs
 class ProgramList(ListView):
     model = Program
     context_object_name = 'programs'
@@ -126,4 +132,9 @@ class ProgramUpdateView(UpdateView):
     model = Program
     form_class = ProgramForm
     template_name = 'program_edit.html'
+    success_url = reverse_lazy('program-list')
+
+class ProgramDeleteView(DeleteView):
+    model = Program
+    template_name = 'program_del.html'
     success_url = reverse_lazy('program-list')
