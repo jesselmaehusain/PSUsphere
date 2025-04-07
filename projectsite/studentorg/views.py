@@ -3,6 +3,10 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 from django.urls import reverse_lazy
 from studentorg.models import Organization, OrgMember, Student, College, Program
 from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
+from typing import Any 
+from django.db.models.query import QuerySet
+from django.db.models import Q
+
 
 class HomePageView(TemplateView):
     template_name = "home.html"
@@ -23,6 +27,15 @@ class OrganizationList(ListView):
     context_object_name = 'organizations'
     template_name = 'org_list.html'
     paginate_by = 5
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(OrganizationList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") != None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(Q(name__icontains=query) |
+                           Q(description__icontains=query))
+        return qs
+
 
 class OrganizationCreateView(CreateView):
     model = Organization
