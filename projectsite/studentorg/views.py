@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from studentorg.models import Organization, OrgMember, Student, College, Program
 from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, CollegeForm, ProgramForm
 from typing import Any 
 from django.db.models.query import QuerySet
 from django.db.models import Q
 
-
+@method_decorator(login_required, name='dispatch')
 class HomePageView(TemplateView):
     template_name = "home.html"
 
