@@ -58,12 +58,9 @@ class OrganizationDeleteView(DeleteView):
 
 class OrgMemberList(ListView):
     model = OrgMember
-    context_object_name = 'object_list'
+    context_object_name = 'orgMember'
     template_name = 'orgMem_list.html'
     paginate_by = 5
-
-
-    from django.db.models import Q
 
     def get_queryset(self, *args, **kwargs):
         qs = super(OrgMemberList, self).get_queryset(*args, **kwargs)
@@ -72,6 +69,8 @@ class OrgMemberList(ListView):
             qs = qs.filter(
                 Q(student__firstname__icontains=query) |
                 Q(student__lastname__icontains=query)
+                |Q(organization__name__icontains=query) 
+                |Q(organization__description__icontains=query)
             )
         return qs
 
@@ -123,6 +122,16 @@ class CollegeList(ListView):
     context_object_name = 'colleges'
     template_name = 'college_list.html'
     paginate_by = 5
+
+   
+    def get_queryset(self, *args, **kwargs):
+        qs = super(CollegeList, self).get_queryset(*args, **kwargs)
+        query = self.request.GET.get('q')
+        if query:
+            qs = qs.filter(
+                Q(college_name__icontains=query)
+            )
+        return qs
 
 class CollegeCreateView(CreateView):
     model = College
