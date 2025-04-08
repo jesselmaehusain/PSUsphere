@@ -157,6 +157,16 @@ class ProgramList(ListView):
     template_name = 'program_list.html'
     paginate_by = 5
 
+    def get_queryset(self, *args, **kwargs):
+        qs = super(ProgramList, self).get_queryset(*args, **kwargs)
+        query = self.request.GET.get('q')
+        if query:
+            qs = qs.filter(
+                Q(college__college_name__icontains=query)|
+                Q(prog_name__icontains=query)
+            )
+        return qs
+
 class ProgramCreateView(CreateView):
     model = Program
     form_class = ProgramForm
