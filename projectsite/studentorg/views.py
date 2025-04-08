@@ -66,18 +66,18 @@ class OrgMemberCreateView(CreateView):
     model = OrgMember
     form_class = OrgMemberForm
     template_name = 'orgMem_add.html'
-    success_url = reverse_lazy('orgMember-list')
+    success_url = reverse_lazy('orgMem_list')
 
 class OrgMemberUpdateView(UpdateView):
     model = OrgMember
     form_class = OrgMemberForm
     template_name = 'orgMem_edit.html'
-    success_url = reverse_lazy('orgMember-list')
+    success_url = reverse_lazy('orgMem_list')
 
 class OrgMemberDeleteView(DeleteView):
     model = OrgMember
     template_name = 'orgMem_del.html'
-    success_url = reverse_lazy('orgMember-list')
+    success_url = reverse_lazy('orgMem_list')
 
 # Student list
 class StudentList(ListView):
@@ -90,18 +90,18 @@ class StudentCreateView(CreateView):
     model = Student
     form_class = StudentForm
     template_name = 'student_add.html'
-    success_url = reverse_lazy('student-list')
+    success_url = reverse_lazy('student_list')
 
 class StudentUpdateView(UpdateView):
     model = Student
     form_class = StudentForm
     template_name = 'student_edit.html'
-    success_url = reverse_lazy('student-list')
+    success_url = reverse_lazy('student_list')
 
 class StudentDeleteView(DeleteView):
     model = Student
     template_name = 'student_del.html'
-    success_url = reverse_lazy('student-list')
+    success_url = reverse_lazy('student_list')
 
 # College list
     
@@ -115,18 +115,18 @@ class CollegeCreateView(CreateView):
     model = College
     form_class = CollegeForm
     template_name = 'colleg_add.html'
-    success_url = reverse_lazy('college-list')
+    success_url = reverse_lazy('college_list')
 
 class CollegeUpdateView(UpdateView):
     model = College
     form_class = CollegeForm
     template_name = 'college_edit.html'
-    success_url = reverse_lazy('college-list')
+    success_url = reverse_lazy('college_list')
 
 class CollegeDeleteView(DeleteView):
     model = College
     template_name = 'college_del.html'
-    success_url = reverse_lazy('college-list')
+    success_url = reverse_lazy('college_list')
 
 # Program URLs
 class ProgramList(ListView):
@@ -139,15 +139,15 @@ class ProgramCreateView(CreateView):
     model = Program
     form_class = ProgramForm
     template_name = 'program_add.html'
-    success_url = reverse_lazy('program-list')
+    success_url = reverse_lazy('program_list')
 
 class ProgramUpdateView(UpdateView):
     model = Program
     form_class = ProgramForm
     template_name = 'program_edit.html'
-    success_url = reverse_lazy('program-list')
+    success_url = reverse_lazy('program_list')
 
 class ProgramDeleteView(DeleteView):
     model = Program
     template_name = 'program_del.html'
-    success_url = reverse_lazy('program-list')
+    success_url = reverse_lazy('program_list')
