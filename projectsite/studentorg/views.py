@@ -70,9 +70,9 @@ class OrgMemberList(ListView):
         if query:
             qs = qs.filter(
                 Q(student__firstname__icontains=query) |
-                Q(student__lastname__icontains=query)
-                |Q(organization__name__icontains=query) 
-                |Q(organization__description__icontains=query)
+                Q(student__lastname__icontains=query)  |
+                Q(organization__name__icontains=query) |
+                Q(organization__description__icontains=query)
             )
         return qs
 
