@@ -1,0 +1,446 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <style>
+    .chart-container {
+      position: relative;
+      height: 400px;
+    }
+  </style>
+  <div class="page-inner">
+    <div class="page-header">
+      <h4 class="page-title">Charts</h4>
+    </div>
+  
+    <!-- First Row: Polar & Scatter -->
+    <div class="row equal-height">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Polar Area Chart</div></div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="PolarAreaChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Scatter Chart</div></div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="ScatterChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end first row -->
+  
+    <!-- Second Row: Doughnut & HTML Legends -->
+    <div class="row equal-height mt-3">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Doughnut Chart</div></div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="ProgramDoughnutChart"style="width: 50%; height: 50%"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Chart with HTML Legends</div></div>
+          <div class="card-body">
+            <div class="chart-container">
+              <canvas id="collegeChartLegend"></canvas>
+            </div>
+            <div id="collegeChartLegend" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- end second row -->
+  </div>
+  <div class="col-md-12 col-lg-8 offset-lg-2">
+    <div class="card">
+      <div class="card-header"><div class="card-title">Heatmap Chart</div></div>
+      <div class="card-body">
+        <div class="chart-container">
+          <canvas id="heatmapChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+          
+          
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@1.2.0/dist/chartjs-chart-matrix.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+
+  
+
+  <!-- Polar Area Chart Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch("{% url 'chart-data' %}")
+            .then(response => response.json())
+            .then(data => {
+                const labels = Object.keys(data);
+                const counts = Object.values(data);
+
+                var ctx = document.getElementById('PolarAreaChart').getContext('2d');
+                
+                new Chart(ctx, {
+                    type: 'polarArea',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: counts,
+                            backgroundColor: [
+                                "#1d7af3", "#f3545d", "#fdaf4b", "#fdff4b", "#a4e310", "#11c258"
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Members per Organization',
+                                color: 'rgb(80, 80, 80)',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                padding: {
+                                    top: 10,
+                                    bottom: 30
+                                }
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: 'rgb(154, 154, 154)',
+                                    font: {
+                                        size: 11
+                                    },
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                enabled: true
+                            }
+                        },
+                        layout: {
+                            padding: {
+                                left: 20,
+                                right: 20,
+                                top: 20,
+                                bottom: 20
+                            }
+                        }
+                    }
+                });
+            })
+            .catch((error) => console.error("Error fetching chart data:", error));
+    });
+  </script>
+
+  <!-- Scatter Chart Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      fetch("{% url 'scatter-chart-data' %}")
+        .then(response => response.json())
+        .then(data => {
+          const points = data.map(item => ({
+            x: item.x,
+            y: item.y,
+            label: item.label
+          }));
+  
+          var ctx = document.getElementById('ScatterChart').getContext('2d');
+  
+          new Chart(ctx, {
+            type: 'scatter',
+            data: {
+              datasets: [{
+                label: 'Colleges: Orgs vs Members',
+                data: points,
+                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                pointRadius: 6
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Organizations vs Org Members per College',
+                  font: {
+                    size: 16,
+                    weight: 'bold'
+                  }
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      const point = context.raw;
+                      return `${point.label}: Orgs = ${point.x}, Members = ${point.y}`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Number of Organizations'
+                  },
+                  beginAtZero: true
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: 'Number of Org Members'
+                  },
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        })
+        .catch((error) => console.error("Error loading scatter chart data:", error));
+    });
+  </script>
+
+  <!-- Doughnut Chart Script -->
+  
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    fetch("{% url 'program-chart-data' %}")
+      .then(response => response.json())
+      .then(data => {
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+
+        const backgroundColors = [
+          '#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#4bc0c0', '#9966ff',
+          '#ff9f40', '#66ff66', '#ff6666', '#6699ff'
+        ];
+
+        const dataset = {
+          data: values,
+          backgroundColor: backgroundColors.slice(0, values.length),
+          borderWidth: 1
+        };
+
+        const ctx = document.getElementById('ProgramDoughnutChart').getContext('2d');
+
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [dataset]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: 'Students per Program',
+                font: {
+                  size: 16,
+                  weight: 'bold'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const label = context.label || '';
+                    const value = context.raw || 0;
+                    return `${label}: ${value} students`;
+                  }
+                }
+              },
+              legend: {
+                position: 'bottom',
+                labels: {
+                  font: {
+                    size: 12
+                  },
+                  usePointStyle: true
+                }
+              }
+            }
+          }
+        });
+      })
+      .catch((error) => console.error("Error loading doughnut chart data:", error));
+  });
+</script>
+
+<!-- HTML Legends Chart Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const ctx = document.getElementById("collegeChartLegend").getContext("2d");
+
+    // Define gradient styles (optional: use static or recreate dynamically)
+    const gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
+    gradientStroke.addColorStop(0, "#177dff");
+    gradientStroke.addColorStop(1, "#80b6f4");
+
+    const gradientFill = ctx.createLinearGradient(500, 0, 100, 0);
+    gradientFill.addColorStop(0, "rgba(23, 125, 255, 0.7)");
+    gradientFill.addColorStop(1, "rgba(128, 182, 244, 0.3)");
+
+    const myHtmlLegendsChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [{
+          label: "Members Joined Per Month",
+          data: [],
+          borderColor: gradientStroke,
+          backgroundColor: gradientFill,
+          borderWidth: 1,
+          legendColor: "#177dff",
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        legend: { display: false },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return `${context.label}: ${context.raw} members`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        legendCallback: function (chart) {
+          let text = [];
+          text.push('<ul class="' + chart.id + '-legend html-legend">');
+          chart.data.datasets.forEach(function (dataset) {
+            text.push('<li><span style="background-color:' + dataset.legendColor + '"></span>');
+            text.push(dataset.label);
+            text.push("</li>");
+          });
+          text.push("</ul>");
+          return text.join("");
+        }
+      }
+    });
+
+    // Load data from Django endpoint
+    fetch("/member_joined_by_month/")
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        myHtmlLegendsChart.data.labels = data.labels;
+        myHtmlLegendsChart.data.datasets[0].data = data.counts;
+        myHtmlLegendsChart.update();
+
+        // Generate and insert HTML legend
+        const legendContainer = document.getElementById("collegeChartLegendLegend");
+        legendContainer.innerHTML = myHtmlLegendsChart.generateLegend();
+      })
+      .catch(error => console.error("Error fetching college chart data:", error));
+  });
+</script>
+
+<!-- Heatmap Chart Script -->
+<script>
+  // Color interpolation: light pink (255, 205, 210) → deep red (183, 28, 28)
+  function getHeatColor(value, max = 100) {
+    const intensity = Math.max(0, Math.min(value / max, 1));
+    const r = Math.round(255 * (1 - intensity) + 183 * intensity);
+    const g = Math.round(205 * (1 - intensity) + 28 * intensity);
+    const b = Math.round(210 * (1 - intensity) + 28 * intensity);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch("{% url 'student_heatmap_data' %}")
+    .then(response => response.json())
+    .then(data => {
+        const programs = data.programs;
+        const months = data.months;
+        const matrixData = data.data;
+        const flatValues = matrixData.flat().flat();  // flatten 2D matrix
+        const maxValue = Math.max(...flatValues);
+
+
+        const ctx = document.getElementById('heatmapChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'matrix',
+            data: {
+                labels: programs,
+                datasets: [{
+                    label: 'Student Count',
+                    data: matrixData.map((row, rowIndex) => {
+                        return row.map((count, colIndex) => ({
+                            x: colIndex,
+                            y: rowIndex,
+                            v: count
+                        }));
+                    }).flat(),
+                    backgroundColor: function(context) {
+                        const value = context.raw.v;
+                        return value > 0 ? getHeatColor(value, maxValue) : 'rgba(255, 255, 255, 0)';
+                    },
+                    borderWidth: 1,
+                    borderColor: '#ffffff',
+                    hoverBackgroundColor: '#ff6384'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'category',
+                        labels: months,
+                        reverse: true,
+                    },
+                    y: {
+                        type: 'category',
+                        labels: programs,
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw.v;
+                                return `Program: ${programs[context.raw.y]} - ${months[context.raw.x]}: ${value} students`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    })
+    .catch((error) => console.error("Error loading heatmap data:", error));
+  });
+</script>
+
+
+{% endblock %}

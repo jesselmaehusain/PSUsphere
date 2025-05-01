@@ -20,7 +20,6 @@
                 </div>
                 <nav class="navbar navbar-header navbar-expand-lg">
                     <div class="container-fluid">
-                        
                         <form class="navbar-left navbar-form nav-search mr-md-3" action="">
                             <div class="input-group">
                                 <input type="text" placeholder="Search ..." class="form-control">
@@ -141,7 +140,7 @@
                             <div class="info">
                                 <a class="" data-toggle="collapse" href="#collapseExample" aria-expanded="true">
                                     <span>
-                                        Hizrian
+                                        Jess_Haina
                                         <span class="user-level">Administrator</span>
                                         <span class="caret"></span>
                                     </span>
@@ -171,7 +170,7 @@
                         </div>
                         <ul class="nav">
                             <li class="nav-item">
-                                <a href="{% url 'home' %}">
+                                <a href="{% url 'chart-page' %}">
                                     <i class="la la-dashboard"></i>
                                     <p>Dashboard</p>
                                 </a>
@@ -280,6 +279,9 @@
     <script src="{% static 'js/plugin/chart-circle/circles.min.js' %}"></script>
     <script src="{% static 'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
     <script src="{% static 'js/ready.min.js' %}"></script>
-    
-
+     
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
     

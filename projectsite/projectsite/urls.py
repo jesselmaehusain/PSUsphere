@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, re_path
+from studentorg import views
 from studentorg.views import (
     HomePageView,
     OrganizationList, OrganizationCreateView, OrganizationUpdateView, OrganizationDeleteView,
@@ -50,5 +51,15 @@ urlpatterns = [
     path('program_list/add/', ProgramCreateView.as_view(), name='program-add'),
     path('program_list/<int:pk>/', ProgramUpdateView.as_view(), name='program-update'),
     path('program_list/<int:pk>/delete/', ProgramDeleteView.as_view(), name='program-delete'),
+
     
+    # Render the page
+    path('charts/', views.chart_page, name='chart-page'),
+
+# Provide JSON data
+    path('chart-data/', views.chart_data, name='chart-data'),
+    path('scatter-chart-data/', views.scatter_chart_data, name='scatter-chart-data'),
+    path('program-chart-data/', views.program_chart_data, name='program-chart-data'),
+    path('member_joined_by_month/', views.member_joined_by_month, name='member-joined-by-month'),
+    path('student_heatmap_data/', views.get_student_heatmap_data, name='student_heatmap_data'),
 ]

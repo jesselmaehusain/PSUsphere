@@ -8,10 +8,20 @@ from studentorg.forms import OrganizationForm, OrgMemberForm, StudentForm, Colle
 from typing import Any 
 from django.db.models.query import QuerySet
 from django.db.models import Q
+from .models import Student
+from collections import Counter
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.db.models import Count
+from django.db import connection
+from django.db.models.functions import TruncMonth
+import calendar
+import json
+from collections import defaultdict
 
 @method_decorator(login_required, name='dispatch')
 class HomePageView(TemplateView):
-    template_name = "home.html"
+    template_name = 'home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -97,7 +107,7 @@ class OrgMemberDeleteView(DeleteView):
 class StudentList(ListView):
     model = Student
     context_object_name = 'students'
-    template_name = 'student_list.html'
+    template_name = 'Student_list.html'
     paginate_by = 5
 
     def get_queryset(self, *args, **kwargs):
@@ -198,3 +208,89 @@ class ProgramDeleteView(DeleteView):
     model = Program
     template_name = 'program_del.html'
     success_url = reverse_lazy('program_list')
+
+
+def chart_page(request):
+    return render(request, 'chart.html')
+
+def chart_data(request):
+    data = {
+        "ACS": 2, "SITE": 0, "Month Center": 2, "Air Industry": 1,
+        "Consider Ability": 0, "Group Their": 2, "Should Realize": 0,
+        "Go Name": 2, "Morning Week": 2, "Game Team": 1, "Resource Show": 0,
+        "Response Foreign": 1, "Bachelor of Science in Computer Science": 1
+    }
+    return JsonResponse(data)
+
+def scatter_chart_data(request):
+    data = []
+
+    colleges = College.objects.all()
+
+    for college in colleges:
+        # X: Number of organizations under this college
+        org_count = Organization.objects.filter(college=college).count()
+
+        # Y: Number of org members in those organizations
+        member_count = OrgMember.objects.filter(organization__college=college).count()
+
+        data.append({
+            'x': org_count,
+            'y': member_count,
+            'label': college.college_name
+        })
+
+    return JsonResponse(data, safe=False)
+
+def program_chart_data(request):
+    data = {}
+
+    programs = Program.objects.annotate(student_count=Count('student'))
+    for prog in programs:
+        data[prog.prog_name] = prog.student_count
+
+    return JsonResponse(data)
+
+def member_joined_by_month(request):
+    data = (
+        OrgMember.objects
+        .annotate(month=TruncMonth("date_joined"))
+        .values("month")
+        .annotate(count=Count("id"))
+        .order_by("month")
+    )
+
+    labels = [entry["month"].strftime("%B") for entry in data]
+    counts = [entry["count"] for entry in data]
+
+    return JsonResponse({"labels": labels, "counts": counts})
+
+def get_student_heatmap_data(request):
+    # Aggregating student data by program and month
+    student_data = Student.objects.annotate(month=TruncMonth('created_at')) \
+                                  .values('program', 'month') \
+                                  .annotate(student_count=Count('id')) \
+                                  .order_by('program', 'month')
+
+    # Organizing the data into a matrix format (program vs month)
+    heatmap_data = defaultdict(lambda: defaultdict(int))
+    for entry in student_data:
+        program = entry['program']
+        month = entry['month'].strftime('%Y-%m')  # Format as Year-Month
+        student_count = entry['student_count']
+        heatmap_data[program][month] = student_count
+
+    # Convert to a list of lists (matrix)
+    programs = Program.objects.all()
+    months = sorted(set(entry['month'].strftime('%Y-%m') for entry in student_data))
+
+    heatmap_matrix = []
+    for program in programs:
+        row = [heatmap_data[program.id].get(month, 0) for month in months]
+        heatmap_matrix.append(row)
+
+    return JsonResponse({
+        'programs': [program.prog_name for program in programs],
+        'months': months,
+        'data': heatmap_matrix
+    })
